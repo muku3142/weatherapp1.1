@@ -18,7 +18,7 @@ document.getElementById('generate').addEventListener('click',async ()=>{
     /*Chain Promise */
     getWeatherData(baseURL,).then( (data)=> {
         postData('/postWeather',{ date: newDate, temp: data, content: content.value})
-        return data;
+     
     }).then( (newData)=>{
         updateUI(newData)
     })
