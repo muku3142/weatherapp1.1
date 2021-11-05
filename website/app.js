@@ -19,12 +19,8 @@ document.getElementById('generate').addEventListener('click',async ()=>{
     getWeatherData(baseURL,).then( (data)=> {
         postData('/postWeather',{ date: newDate, temp: data, content: content.value})
         return data;
-    }).then((newData)=>{
-
-        document.getElementById('date').innerHTML=newDate;
-        document.getElementById('temp').innerHTML=newData;
-        document.getElementById('content').innerHTML=content.value;
-
+    }).then( (newData)=>{
+        updateUI(newData)
     })
 })
 //-------------------------------------------------------------------------------------------------------------
@@ -37,15 +33,17 @@ const postData = async ( url = '', data = {})=>{
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(data)
+
     });
+    return data;
     //fetching new data by get request
-    try {
-        const nodeRes= await fetch('/getWeather')
-        const newData= await nodeRes.json();
-        return(newData)
-    }catch(e) {
-        console.log("error")
-    }
+    // try {
+    //     const nodeRes= await fetch('/getWeather')
+    //     const newData= await nodeRes.json();
+    //     return(newData)
+    // }catch(e) {
+    //     console.log("error")
+    // }
 }
 //-------------------------------------------------------------------------------------------------------------
 /* Async function to GET data from weather API */
@@ -64,5 +62,19 @@ const getWeatherData = async (baseURL)=>{
     console.log(res);
 }
 //---------------------------------------------------------------------------------------------------------------
+/* Update UI */
+const updateUI= async ( url = '', data = {})=>{
+    //fetch data by get request
+    const request= await fetch('/getWeather');
+    try {
+        const allData= await request.json();
+        document.getElementById('date').innerHTML=allData.date;
+        document.getElementById('temp').innerHTML=allData.temp;
+        document.getElementById('content').innerHTML=allData.content;
 
+    } catch (e){
+        console.log("error",e);
+    }
+}
+//---------------------------------------------------------------------------------------------------------------
 
