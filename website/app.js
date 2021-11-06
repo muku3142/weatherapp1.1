@@ -7,22 +7,29 @@ const zipCode= document.getElementById('zip');
 const content= document.getElementById('feelings');
 // Create a new date instance dynamically with JS
 let d = new Date();
-let newDate = d.getMonth()+'.'+ d.getDate()+'.'+ d.getFullYear();
+let newDate = d.getMonth()+1+'.'+ d.getDate()+'.'+ d.getFullYear();
 //------------------------------------------------------------------------------------------------------------
 /* Main Code */
 //Event Listener for submit button
 document.getElementById('generate').addEventListener('click',async ()=>{
-    //API from openweathermap.org
-    const apiKey = '17f88db7ada45309f24c14ff0c1e336f';
-    const baseURL= `https://api.openweathermap.org/data/2.5/weather?zip=${zipCode.value}&appid=${apiKey}`;
-    /*Chain Promise */
-    getWeatherData(baseURL,).then( (data)=> {
-        postData('/postWeather',{ date: newDate, temp: data, content: content.value})
-     
-    }).then( (newData)=>{
-        updateUI(newData)
-    })
+    //Making sure zipvalue not left empty by user
+    const zipValue= zipCode.value;
+   if(zipValue==''){
+       alert("please enter zipcode");
+   } else {
+       //API from openweathermap.org
+       const apiKey = '17f88db7ada45309f24c14ff0c1e336f&units=metric';
+       const baseURL = `https://api.openweathermap.org/data/2.5/weather?zip=${zipCode.value}&appid=${apiKey}`;
+       /*Chain Promise */
+       getWeatherData(baseURL,).then((data) => {
+           postData('/postWeather', {date: newDate, temp: data, content: content.value})
+
+       }).then((newData) => {
+           updateUI(newData)
+       })
+   }
 })
+
 //-------------------------------------------------------------------------------------------------------------
 /* Async function to POST data */
 const postData = async ( url = '', data = {})=>{
